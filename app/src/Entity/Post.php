@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[ApiFilter(SearchFilter::class, properties: [
     'email' => SearchFilter::STRATEGY_EXACT,
+    'unicorn.name' => 'partial',
 ])]
 #[ORM\HasLifecycleCallbacks]
 class Post
@@ -68,6 +69,7 @@ class Post
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[Groups(['read', 'write'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?Unicorn $unicorn = null;
 
     public function getId(): ?int

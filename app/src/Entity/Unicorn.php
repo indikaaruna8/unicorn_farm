@@ -10,9 +10,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UnicornRepository::class)]
-#[ApiResource(operations: [
-    new GetCollection()
-])]
+#[ApiResource(
+    paginationItemsPerPage: 50,
+    operations: [
+        new GetCollection()
+    ])
+]
 class Unicorn
 {
     #[ORM\Id]
