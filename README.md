@@ -10,3 +10,5 @@ Technologies :
 
 ## Access the PHP container
     docker exec -it unicorn-php82-container bash
+## Load test data
+    php bin/console doctrine:fixtures:load
