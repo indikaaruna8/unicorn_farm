@@ -10,13 +10,17 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['read']],
-    denormalizationContext: ['groups' => ['write']],
+    // operations: [
+    //     new ApiPost(messenger: true, output: true, status: 201)
+    // ],
+    normalizationContext: ['groups' => ['post.read']],
+    denormalizationContext: ['groups' => ['post.write']],
 )]
 #[ApiFilter(SearchFilter::class, properties: [
-    'email' => SearchFilter::STRATEGY_EXACT,
+    'unicornEnthusiast.email' => SearchFilter::STRATEGY_EXACT,
     'unicorn.name' => 'partial',
 ])]
 #[ORM\HasLifecycleCallbacks]
@@ -29,7 +33,7 @@ class Post
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['read', 'write'])]
+    #[Groups(['post.read', 'post.write'])]
     #[Assert\Length(
         min: 50,
         max: 400,
@@ -38,39 +42,24 @@ class Post
     )]
     private ?string $message = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Groups(['read', 'write'])]
-    #[Assert\Length(
-        max: 255,
-        maxMessage: 'Your name cannot be longer than {{ limit }} characters',
-    )]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Email(
-        message: 'The email {{ value }} is not a valid email.',
-    )]
-    #[Assert\Length(
-        max: 255,
-        maxMessage: 'Email cannot be longer than {{ limit }} characters',
-    )]
-    #[Groups(['read', 'write'])]
-    private ?string $email = null;
-
     #[ORM\Column]
-    #[Groups('read')]
+    #[Groups('post.read')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups('read')]
+    #[Groups('post.read')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[Groups(['read', 'write'])]
+    #[Groups(['post.read', 'post.write'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?Unicorn $unicorn = null;
+
+    #[ORM\ManyToOne(inversedBy: 'post', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['post.read', 'post.write'])]
+    #[Assert\NotBlank]
+    private ?UnicornEnthusiast $unicornEnthusiast = null;
 
     public function getId(): ?int
     {
@@ -85,30 +74,6 @@ class Post
     public function setMessage(string $message): self
     {
         $this->message = $message;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
 
         return $this;
     }
@@ -158,6 +123,18 @@ class Post
     public function setUnicorn(?Unicorn $unicorn): self
     {
         $this->unicorn = $unicorn;
+
+        return $this;
+    }
+
+    public function getUnicornEnthusiast(): ?UnicornEnthusiast
+    {
+        return $this->unicornEnthusiast;
+    }
+
+    public function setUnicornEnthusiast(?UnicornEnthusiast $unicornEnthusiast): self
+    {
+        $this->unicornEnthusiast = $unicornEnthusiast;
 
         return $this;
     }
