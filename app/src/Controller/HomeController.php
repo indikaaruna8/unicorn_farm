@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Message\Command\SavePurchaseCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class HomeController extends AbstractController
 {
@@ -15,4 +19,27 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/mail', name: 'app_mail')]
+    public function mail(MessageBusInterface $bus): Response
+    {
+       //  $bus->dispatch(new EmailNotification('Look! I created a message!'));
+         $bus->dispatch(new SavePurchaseCommand());
+        //$mailer->send($email);
+        return $this->render('home/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    // #[Route('/mail2', name: 'app_mail2')]
+    // public function mail2(MailerInterface $mail): Response
+    // {
+    //     $email = (new Email() ) ->to('email@example.com')
+    //     ->from("indika@yahoo.com")
+    //     ->html("<h1>HI</h1>")
+    //     ->subject('email@example.com');
+        
+    //     $mail->send($email);
+    //    return new Response("xxx");
+    // }
 }

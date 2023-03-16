@@ -26,7 +26,7 @@ services:
             dockerfile: ./php/Dockerfile
         container_name: unicorn-php82-container
         ports:
-            - "9000:9000"
+            - "9001:9000"
         volumes:
             - ./app:/var/www/project
         networks:
@@ -48,8 +48,8 @@ services:
         networks:
             - unicorn-nginx-php82-mysql8
 
-    mailer-service:
+    mailer: #(same as email config)
         image: schickling/mailcatcher
         ports: ["1025", "1080"]
-        networks:
-            - unicorn-nginx-php82-mysql8
+  #      networks:
+  #          - unicorn-nginx-php82-mysql8
