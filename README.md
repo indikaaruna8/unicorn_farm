@@ -13,7 +13,7 @@ Technologies :
 ## Access the PHP container
     docker exec -it unicorn-php82-container bash
 ## Install Vendor
-    compoer install
+    composer install
 ## Create Database
     php bin/console doctrine:database:create
 ## Create Tables
@@ -29,3 +29,9 @@ Technologies :
     - php bin/console doctrine:fixtures:load --env=test
     - php bin/phpunit
 - Or execute ./phpunit.sh
+
+## Symfony Mail Catcher
+symfony open:local:webmail
+
+## Symfony Mail Catcher
+symfony console messenger:consume async -vv 
