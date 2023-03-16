@@ -29,3 +29,18 @@ Technologies :
     - php bin/console doctrine:fixtures:load --env=test
     - php bin/phpunit
 - Or execute ./phpunit.sh
+
+## Symfony Local Server(For mail test)
+    - symfony server:start
+
+## Symfony Mail Catcher
+
+symfony open:local:webmail
+## Consuming Messages (Running the Worker)
+
+symfony console messenger:consume async -vv
+
+ - https://symfony.com/doc/current/messenger.html#consuming-messages-running-the-worker
+
+
+
