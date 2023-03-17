@@ -10,10 +10,16 @@ Technologies :
 - MySQl 
 - Api platform (https://api-platform.com/)
 
+## Install and start docker
+    Please follow up the document 
+    - https://docs.docker.com/get-docker/
+## Build the container and run  the project
+    - docker-compose  build
+    - docker-compose up
 ## Access the PHP container
     docker exec -it unicorn-php82-container bash
 ## Install Vendor
-    compoer install
+    composer install
 ## Create Database
     php bin/console doctrine:database:create
 ## Create Tables
@@ -42,5 +48,14 @@ symfony console messenger:consume async -vv
 
  - https://symfony.com/doc/current/messenger.html#consuming-messages-running-the-worker
 
+##  To test purchase and email
+    If you want to test email server in local please follow the following steps 
+    - docker-compose up -d 
+    -  cd <Project>/app
+    -  symfony server:start -d
+    -  Open mail catcher 
+        symfony open:local:webmail
+    - Mails are sending asynchronically. Please run following command to do 
+     symfony console messenger:consume async -vv
 
-
+    
