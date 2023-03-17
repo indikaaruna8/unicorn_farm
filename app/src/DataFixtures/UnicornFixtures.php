@@ -8,7 +8,7 @@ use App\Entity\Unicorn;
 
 class UnicornFixtures extends Fixture
 {
-    const UNICORNS = [
+    public const UNICORNS = [
         ["name" => "	Amber	", "gender" => "f"],
         ["name" => "	Amethyst	", "gender" => "f"],
         ["name" => "	Andromeda	", "gender" => "f"],
@@ -70,11 +70,11 @@ class UnicornFixtures extends Fixture
     ];
     public function load(ObjectManager $manager): void
     {
-        foreach(static::UNICORNS as $unicornInfo) {
+        foreach (static::UNICORNS as $unicornInfo) {
             $unicorn = (new Unicorn())->setName(trim($unicornInfo['name']));
             $manager->persist($unicorn);
         }
-        
+
         $manager->flush();
     }
 }

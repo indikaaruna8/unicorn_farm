@@ -14,7 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
     paginationItemsPerPage: 50,
     operations: [
         new GetCollection()
-    ])
+    ]
+)
 ]
 class Unicorn
 {
