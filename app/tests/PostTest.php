@@ -8,12 +8,29 @@ class PostTest extends ApiTestCase
 {
     public function testCreatePost(): void
     {
-        $response = static::createClient()->request('POST', '/api/posts', [
-            "json" => [
+        $emialPrefix = rand(10000, 10000333);
+        $response = static::createClient()->request(
+            'POST',
+            '/api/unicorn_enthusiasts',
+            [
+                "json" => [
+                    "name" => "Nagasena",
+                    "email" => "nagasena" . $emialPrefix . "@yahoo.com"
+                ]
+            ]
+        );
+        $this->assertResponseStatusCodeSame(201);
+        $json = json_decode($response->getContent(), true);
+        $UnicornEnthusiast =  $json["@id"];
+        $this->assertEquals(1, 1);
+        $response = static::createClient()->request(
+            'POST',
+            '/api/posts',
+            [
+                "json" => [
                     "message" =>  "stringstringstringstringstringstringstringstringst",
-                    "name" =>  "string",
-                    "email" =>  "user@example.com",
-                    "unicorn"=> "/api/unicorns/11"
+                    "unicorn" => "/api/unicorns/11",
+                    "unicornEnthusiast" => $UnicornEnthusiast
                 ]
             ]
         );
@@ -24,10 +41,13 @@ class PostTest extends ApiTestCase
 
     public function testUpdatePost(): void
     {
-        $response = static::createClient()->request('PUT', '/api/posts/1', [
-            "json" => [
+        $response = static::createClient()->request(
+            'PUT',
+            '/api/posts/1',
+            [
+                "json" => [
                     "message" =>  "abcddeterewafadfadsfadsfadsfafafasfdsfsdfsdsddfadsfadsfasdfsafasdf",
-                    "unicorn"=> "/api/unicorns/11",     
+                    "unicorn" => "/api/unicorns/11",
                 ]
             ]
         );
@@ -41,37 +61,52 @@ class PostTest extends ApiTestCase
 
     public function testMessageLength(): void
     {
-        $response = static::createClient()->request('PUT', '/api/posts/1', [
-            "json" => [
+        $response = static::createClient()->request(
+            'PUT',
+            '/api/posts/1',
+            [
+                "json" => [
                     "message" =>  "abcd",
-                    "unicorn"=> "/api/unicorns/11",     
+                    "unicorn" => "/api/unicorns/11",
                 ]
             ]
         );
         $this->assertResponseStatusCodeSame(422);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            "@type"=> "ConstraintViolationList",
-            "hydra:title"=> "An error occurred",
-            "hydra:description"=> "message: Message must be at least 50 characters long",
+            "@type" => "ConstraintViolationList",
+            "hydra:title" => "An error occurred",
+            "hydra:description" => "message: Message must be at least 50 characters long",
         ]);
     }
 
     public function testInvalidEmailEmail(): void
     {
-        $response = static::createClient()->request('PUT', '/api/posts/1', [
-            "json" => [
+        $response = static::createClient()->request(
+            'PUT',
+            '/api/posts/1',
+            [
+                "json" => [
                     "message" =>  "abcd",
-                    "unicorn"=> "/api/unicorns/11",     
+                    "unicorn" => "/api/unicorns/11",
                 ]
             ]
         );
         $this->assertResponseStatusCodeSame(422);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertJsonContains([
-            "@type"=> "ConstraintViolationList",
-            "hydra:title"=> "An error occurred",
-            "hydra:description"=> "message: Message must be at least 50 characters long",
+            "@type" => "ConstraintViolationList",
+            "hydra:title" => "An error occurred",
+            "hydra:description" => "message: Message must be at least 50 characters long",
         ]);
+    }
+
+    public function testDeletePost(): void
+    {
+        $response = static::createClient()->request(
+            'DELETE',
+            '/api/posts/1',
+        );
+        $this->assertResponseStatusCodeSame(204);
     }
 }

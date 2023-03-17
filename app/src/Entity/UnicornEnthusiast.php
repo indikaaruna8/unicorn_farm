@@ -13,7 +13,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UnicornEnthusiastRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['ue.read']],
+    denormalizationContext: ['groups' => ['ue.write']],
+)]
 class UnicornEnthusiast
 {
     #[ORM\Id]
@@ -23,7 +26,7 @@ class UnicornEnthusiast
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
-    #[Groups(['read'])]
+    #[Groups(['read', 'ue.read', 'ue.write'])]
     #[Assert\Length(
         max: 255,
         maxMessage: 'Your name cannot be longer than {{ limit }} characters',
@@ -39,9 +42,10 @@ class UnicornEnthusiast
         max: 255,
         maxMessage: 'Email cannot be longer than {{ limit }} characters',
     )]
-    #[Groups(['read'])]
+    #[Groups(['read', 'ue.read', 'ue.write'])]
     private ?string $email = null;
 
+    #[Groups(['read', 'ue.read'])]
     #[ORM\OneToMany(mappedBy: 'unicornEnthusiast', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $post;
 

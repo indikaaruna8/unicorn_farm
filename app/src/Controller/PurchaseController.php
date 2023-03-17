@@ -18,6 +18,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Purchase as PurchaseInfo;
 use App\Exception\ExceptionMessageTrait;
+use App\Utill\FormErrorUtill;
 use Psr\Log\LoggerInterface;
 
 #[AsController]
@@ -49,18 +50,36 @@ class PurchaseController extends AbstractController
             throw new ValidationException("The form is not submitted.");
         }
         if (!$form->isValid()) {
-            throw new ValidationException("The form is not valied");
+            $errors =  FormErrorUtill::getErrors($form);
+            $error =  [
+                "violations" =>  $errors
+            ];
+            return $this->json($error, 422);
+        }
+        try {
+            $unicorne = $this->unicornRepository
+                ->findOneBy(['id' =>  $purchse->getUnicornId()]);
+            if (!$unicorne) {
+                throw new UnicornNotFoundException(sprintf('The unicorn "%s" does not exist.', $purchse->getUnicornId()));
+            }
+
+            $unicornEnthusiasts = $this->unicornEnthusiastRepository
+                ->findOneBy(['id' =>  $purchse->getUnicornEnthusiastsId()]);
+            if (!$unicornEnthusiasts) {
+                throw new UnicornNotFoundException(sprintf('The unicorn enthusiast "%s" does not exist.', $purchse->getUnicornEnthusiastsId()));
+            }
+        } catch (UnicornNotFoundException $ex) {
+            return $this->json(
+                [
+                    "@context" =>  "/api/contexts/Error",
+                    "@type" => "hydra:Error",
+                    "hydra:title" =>  "An error occurred",
+                    "hydra:description" =>  $ex->getMessage(),
+                ],
+                400
+            );
         }
 
-        $unicorne = $this->unicornRepository->findOneBy(['id' =>  $purchse->getUnicornId()]);
-        if (!$unicorne) {
-            throw new UnicornNotFoundException(sprintf('The unicorn "%s" does not exist.', $purchse->getUnicornId()));
-        }
-
-        $unicornEnthusiasts = $this->unicornEnthusiastRepository->findOneBy(['id' =>  $purchse->getUnicornEnthusiastsId()]);
-        if (!$unicornEnthusiasts) {
-            throw new UnicornNotFoundException(sprintf('The unicorn enthusiast "%s" does not exist.', $purchse->getUnicornEnthusiastsId()));
-        }
         $purchaseInfo = (new PurchaseInfo())
             ->setUnicornId($unicorne->getId())
             ->setUnicornName($unicorne->getName())

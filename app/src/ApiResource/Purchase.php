@@ -11,21 +11,20 @@ use  App\Exception\UnicornNotFoundException;
     exceptionToStatus: [UnicornNotFoundException::class => 404],
     operations: [
 
-    new Post(
-        name: 'purchase',
-        uriTemplate: '/api/purchase',
-        controller: PurchaseController::class,
-        routeName: 'path_purchase',
-    )
-]
+        new Post(
+            name: 'purchase',
+            uriTemplate: '/api/purchase',
+            controller: PurchaseController::class,
+            routeName: 'path_purchase',
+        )
+    ]
 )]
 class Purchase
 {
-    // #[Assert\Email(
-    //     message: 'The email {{ value }} is not a valid email.',
-    // )]
+    #[Assert\NotBlank]
     private string $unicorn;
 
+    #[Assert\NotBlank]
     private string  $unicornEnthusiasts;
 
     /**
@@ -67,12 +66,12 @@ class Purchase
     public function getUnicornId()
     {
         $item = explode('/', $this->unicorn);
-        return $item[count($item) -1];
+        return $item[count($item) - 1];
     }
 
     public function getUnicornEnthusiastsId(): string
     {
         $item = explode('/', $this->unicornEnthusiasts);
-        return $item[count($item) -1];
+        return $item[count($item) - 1];
     }
 }
