@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UnicornRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,6 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ]
     )
 ]
+#[ApiFilter(OrderFilter::class, properties: ['name'], arguments: ['orderParameterName' => 'order'])]
 class Unicorn
 {
     public const GENDER_FEMALE = 'f';
