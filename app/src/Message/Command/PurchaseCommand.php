@@ -5,7 +5,7 @@ namespace App\Message\Command;
 use App\Entity\Purchase;
 use Doctrine\Common\Collections\Collection;
 
-class SavePurchaseCommand
+class PurchaseCommand
 {
     public function __construct(
         private Purchase $purchase,
