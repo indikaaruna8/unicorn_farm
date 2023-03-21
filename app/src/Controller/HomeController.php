@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\ApiResource\Purchase;
-use App\Form\Type\PurchaseType;
-use App\Message\Command\SavePurchaseCommand;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;

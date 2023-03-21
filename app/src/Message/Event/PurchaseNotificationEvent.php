@@ -5,7 +5,7 @@ namespace App\Message\Event;
 use App\Entity\Purchase;
 use Doctrine\Common\Collections\Collection;
 
-class SavePurchaseEvent
+class PurchaseNotificationEvent
 {
     public function __construct(
         private Purchase $purchase,
@@ -14,7 +14,7 @@ class SavePurchaseEvent
 
     public function getName(): ?string
     {
-        return $this->purchase->getUnicornEnthusiastId();
+        return $this->purchase->getUnicornEnthusiastName();
     }
 
     public function getEmail(): ?string
