@@ -8,13 +8,14 @@ use App\Message\Event\PurchaseNotificationEvent;
 use App\Repository\PostRepository;
 use App\Repository\PurchaseRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * This command will save the order and delete all the post related to any unicorn.
  */
-class PurchaseCommandHandler implements MessageHandlerInterface
+#[AsMessageHandler()]
+class PurchaseCommandHandler
 {
     public function __construct(
         private MessageBusInterface $eventBus,

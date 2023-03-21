@@ -3,18 +3,17 @@
 namespace App\MessageHandler\Event;
 
 use App\Message\Event\PurchaseNotificationEvent;
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * Purchase notification email.
  */
-class PurchaseNotificationEventHandler implements MessageHandlerInterface
+#[AsMessageHandler()]
+class PurchaseNotificationEventHandler
 {
     /**
      * Undocumented function
