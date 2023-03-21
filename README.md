@@ -69,15 +69,12 @@ symfony console messenger:consume async -vv
 
 - I should be able to get a list of all the unicorns at the farm
     ````
-    ```
     - curl -X 'GET'  'http://localhost:8081/api/unicorns?page=1&order%5Bname%5D=desc' -H 'accept: application/json'
-    ```
     ````
 - I should be able to create a post in my name
     Two api call's requied 
     - Create Unicorn Enthusiast
     ````
-    ```
         curl -X 'POST' \
         'http://localhost:8081/api/unicorn_enthusiasts' \
         -H 'accept: application/ld+json' \
@@ -86,11 +83,9 @@ symfony console messenger:consume async -vv
         "name": "Mike",
         "email": "mike@abc.com"
         }'
-    ```
     ````
-        <br />
+        __
     ````
-    ```
         You will get following output <br />
         {
             "@context": "/api/contexts/UnicornEnthusiast",
@@ -101,10 +96,9 @@ symfony console messenger:consume async -vv
             "post": []
         }
     ````
-    ```
+
     - Create a post 
         ````
-        ```
             curl -X 'POST' \
             'http://localhost:8081/api/posts' \
             -H 'accept: application/ld+json' \
@@ -114,7 +108,6 @@ symfony console messenger:consume async -vv
             "unicorn": "/api/unicorns/206",
             "unicornEnthusiast": "/api/unicorn_enthusiasts/9"
             }'
-        ```
         ````
             - /api/unicorns/206 : Unicorn get api uri 
             - /api/unicorn_enthusiasts/9 -  Unicorn Enthusiast get api 
@@ -126,36 +119,29 @@ symfony console messenger:consume async -vv
     - I should be able to see all posts that were made
         _ You can seach post by email.
         ````
-        ``` 
             curl -X 'GET' \
             'http://localhost:8081/api/posts?page=1&unicornEnthusiast.email=mike%40abc.com' \
             -H 'accept: application/ld+json'
-        ```
         ````
 
     - I should be able to see all posts someone specific has made
         ````
-        ```
             curl -X 'GET' \
                 'http://localhost:8081/api/posts?page=1&unicornEnthusiast.email=mike%40abc.com' \
                 -H 'accept: application/ld+json'
-        ```
-    ````
+        ````
     - I should be able to delete a post I made
         - Get all the post that you created
         - Delete post one by one
         ````
-        ```
             curl -X 'DELETE' \
             'http://localhost:8081/api/posts/14' \
             -H 'accept: */*'
-        ```
         ````
 
     - I should be able to purchase a unicorn, which should delete all posts linked to my
         unicorn
         ````
-        ```
             curl -X 'POST' \
             'http://localhost:8081/api/purchase' \
             -H 'accept: application/ld+json' \
@@ -164,6 +150,5 @@ symfony console messenger:consume async -vv
             "unicorn": " /api/unicorns/206 ",
             "unicornEnthusiasts": "/api/unicorn_enthusiasts/9"
             }'
-        ```
         ````
         Api will delete the post send mail as synchronically
