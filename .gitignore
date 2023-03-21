@@ -1,3 +1,5 @@
 /mysql/*
 Workbook1.xlsx
 z_update
+/app/src/Controller/MailTestController.php 
+.php-cs-fixer.cache

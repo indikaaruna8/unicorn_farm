@@ -4,20 +4,20 @@ networks:
     unicorn-nginx-php82-mysql8:
 
 services:
-    # nginx
-    # nginx-service:        
-    #     image: nginx:stable-alpine        
-    #     container_name: unicorn-nginx-container
-    #     ports:
-    #         - "8081:80"
-    #     volumes:
-    #         - ./app:/var/www/project
-    #         - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    #     depends_on:
-    #         - php82-service
-    #         - mysql8-service
-    #     networks:
-    #         - unicorn-nginx-php82-mysql8
+    #nginx
+    nginx-service:        
+        image: nginx:stable-alpine        
+        container_name: unicorn-nginx-container
+        ports:
+            - "8081:80"
+        volumes:
+            - ./app:/var/www/project
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php82-service
+            - mysql8-service
+        networks:
+            - unicorn-nginx-php82-mysql8
 
     # php
     php82-service:
