@@ -3,15 +3,18 @@
 namespace App\MessageHandler\Command;
 
 use App\Exception\DatabaseTransactionException;
-use App\Message\Command\SavePurchaseCommand;
-use App\Message\Event\SavePurchaseEvent;
+use App\Message\Command\PurchaseCommand;
+use App\Message\Event\PurchaseNotificationEvent;
 use App\Repository\PostRepository;
 use App\Repository\PurchaseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class SavePurchaseHandler implements MessageHandlerInterface
+/**
+ * This command will save the order and delete all the post related to any unicorn.
+ */
+class PurchaseCommandHandler implements MessageHandlerInterface
 {
     public function __construct(
         private MessageBusInterface $eventBus,
@@ -21,7 +24,7 @@ class SavePurchaseHandler implements MessageHandlerInterface
     ) {
     }
 
-    public function __invoke(SavePurchaseCommand $purchase)
+    public function __invoke(PurchaseCommand $purchase)
     {
         $this->em->beginTransaction();
         try {
@@ -36,6 +39,6 @@ class SavePurchaseHandler implements MessageHandlerInterface
             throw  new DatabaseTransactionException("Internal database transaction error.", 1001, $ex);
         }
 
-        $this->eventBus->dispatch(new SavePurchaseEvent($purchase->getPurchase()));
+        $this->eventBus->dispatch(new PurchaseNotificationEvent($purchase->getPurchase()));
     }
 }

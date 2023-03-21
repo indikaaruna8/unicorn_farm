@@ -7,7 +7,7 @@ use App\ApiResource\Purchase;
 use App\Entity\Post;
 use App\Exception\UnicornNotFoundException;
 use App\Form\Type\PurchaseType;
-use App\Message\Command\SavePurchaseCommand;
+use App\Message\Command\PurchaseCommand;
 use App\Repository\UnicornEnthusiastRepository;
 use App\Repository\UnicornRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,14 +17,18 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Purchase as PurchaseInfo;
-use App\Exception\ExceptionMessageTrait;
-use App\Utill\FormErrorUtill;
+use App\Traits\ExceptionMessageTrait as TraitsExceptionMessageTrait;
+use App\Traits\FormErrorTrait;
+use App\Traits\ResourceNotFoundErrorTrait;
 use Psr\Log\LoggerInterface;
 
 #[AsController]
 class PurchaseController extends AbstractController
 {
-    use ExceptionMessageTrait;
+    use TraitsExceptionMessageTrait;
+    use FormErrorTrait;
+    use ResourceNotFoundErrorTrait;
+
     public function __construct(
         private UnicornRepository $unicornRepository,
         private UnicornEnthusiastRepository $unicornEnthusiastRepository
@@ -50,7 +54,7 @@ class PurchaseController extends AbstractController
             throw new ValidationException("The form is not submitted.");
         }
         if (!$form->isValid()) {
-            $errors =  FormErrorUtill::getErrors($form);
+            $errors =  $this->getFormValidationErrors($form);
             $error =  [
                 "violations" =>  $errors
             ];
@@ -69,15 +73,8 @@ class PurchaseController extends AbstractController
                 throw new UnicornNotFoundException(sprintf('The unicorn enthusiast "%s" does not exist.', $purchse->getUnicornEnthusiastsId()));
             }
         } catch (UnicornNotFoundException $ex) {
-            return $this->json(
-                [
-                    "@context" =>  "/api/contexts/Error",
-                    "@type" => "hydra:Error",
-                    "hydra:title" =>  "An error occurred",
-                    "hydra:description" =>  $ex->getMessage(),
-                ],
-                400
-            );
+            [$errorDsc, $code] = $this->getNotFoundErrorMessage($ex);
+            return $this->json($errorDsc, $code);
         }
 
         $purchaseInfo = (new PurchaseInfo())
@@ -88,7 +85,7 @@ class PurchaseController extends AbstractController
             ->setUnicornEnthusiastName($unicornEnthusiasts->getName())
             ->setNoOfPost($unicorne->getPosts()->count());
         try {
-            $bus->dispatch(new SavePurchaseCommand($purchaseInfo, $unicorne->getPosts()));
+            $bus->dispatch(new PurchaseCommand($purchaseInfo, $unicorne->getPosts()));
         } catch (\Exception $ex) {
             $log->error($ex->getMessage(), ['code' => $ex->getCode()]);
             throw new \App\Exception\ApiException($this->getExMessage("Internal Error.", $ex->getCode()));

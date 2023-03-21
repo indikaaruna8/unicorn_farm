@@ -1,12 +1,21 @@
 <?php
 
-namespace App\Utill;
+namespace App\Traits;
 
 use Symfony\Component\Form\FormInterface;
 
-class FormErrorUtill
+/**
+ * Handle api form errors
+ */
+trait FormErrorTrait
 {
-    public static function getViolations(FormInterface $form)
+    /**
+     * Undocumented function
+     *
+     * @param FormInterface $form validated form
+     * @return array
+     */
+    protected function getViolations(FormInterface $form): array
     {
         $errors = [];
         $i = 0;
@@ -17,7 +26,7 @@ class FormErrorUtill
 
         foreach ($form->all() as $childForm) {
             if ($childForm instanceof FormInterface) {
-                if ($childErrors = self::getViolations($childForm)) {
+                if ($childErrors = $this->getViolations($childForm)) {
                     foreach ($childErrors as $err) {
                         $errors[] = [
                             'propertyPath' => $childForm->getName(),
@@ -31,9 +40,15 @@ class FormErrorUtill
         return $errors;
     }
 
-    public static function getErrors(FormInterface $form)
+    /**
+     * Undocumented function
+     *
+     * @param FormInterface $form
+     * @return array
+     */
+    protected function getFormValidationErrors(FormInterface $form): array
     {
-        $violations = self::getViolations($form);
+        $violations = $this->getViolations($form);
 
         return  [
             "@context" => "/api/contexts/ConstraintViolationList",
