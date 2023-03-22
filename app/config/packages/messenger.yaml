@@ -8,14 +8,14 @@ framework:
             event.bus: ~ 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            #async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
-            sync: 'sync://'
+            #sync: 'sync://'
 
         routing:
-            'App\Message\Command\PurchaseCommand': sync
-            'App\Message\Event\PurchaseNotificationEvent': async
-
+            #'App\Message\Command\PurchaseCommand': sync
+            #'App\Message\Event\PurchaseNotificationEvent': async
+ 
 # when@test:
 #    framework:
 #        messenger:

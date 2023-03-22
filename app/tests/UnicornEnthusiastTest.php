@@ -43,7 +43,6 @@ class UnicornEnthusiastTest extends ApiTestCase
             "email" => "piter@yahoo.com"
         ]);
 
-        echo $response->getContent();
         $this->assertResponseStatusCodeSame(200);
     }
 
@@ -68,7 +67,6 @@ class UnicornEnthusiastTest extends ApiTestCase
             "email" => "ronald@yahoo.com"
         ]);
 
-        echo $response->getContent();
         $this->assertResponseStatusCodeSame(200);
     }
     public function testDeleteUnicornEnthusiast(): void
